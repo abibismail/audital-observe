@@ -6,7 +6,7 @@ This is a **standalone, independent horizontal developer entry point** to Audita
 
 ## 60-second synthetic demonstration
 
-Requirements: Node.js 22+, TypeScript compiler (`tsc` in PATH). No cloud account or network calls required.
+Requirements: Node.js 22+ and TypeScript 5.8.3 (`tsc` in PATH, or `npm install` for the pinned development dependency). Demo execution makes no cloud or network calls.
 
 ```sh
 npm run demo:phantom-success
@@ -26,7 +26,7 @@ This package is **not published to npm**; `npx audital reconcile` would work onl
 
 ## Development-only hosted API
 
-The API has request ingress, HMAC normalization, a scoped in-memory store, signed evidence output, temporary opt-in bearer share links, CI Check output formatting, monitor registration and telemetry. **It deliberately rejects production mode**. Background provider monitoring, durable Postgres/RLS, cloud KMS credential custody, live connectors from the API and outbound alerts **are not enabled**. See [`docs/PRODUCTION_GATES.md`](docs/PRODUCTION_GATES.md).
+The API has request ingress, HMAC normalization, a scoped in-memory store, signed evidence output, temporary opt-in bearer share links, CI Check output formatting, monitor registration and telemetry. `ObserveWorker` has a tested timer and read-only observation callback for local integration, but the API does not activate it. **It deliberately rejects production mode**. Background provider monitoring, durable Postgres/RLS, cloud KMS credential custody, live connectors from the API and outbound alerts **are not enabled**. See [`docs/PRODUCTION_GATES.md`](docs/PRODUCTION_GATES.md).
 
 ```sh
 export AUDITAL_OBSERVE_MODE=development

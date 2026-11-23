@@ -3,8 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "workspaces": ["packages/*", "apps/*"],
-  "engines": {"node": ">=22"},
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "tsc -p packages/observe-contract/tsconfig.json",
     "test": "npm run build && node --test packages/*/tests/*.test.mjs apps/api/tests/*.test.mjs",
@@ -12,5 +17,8 @@
     "api:dev": "npm run build && node apps/api/src/server.mjs",
     "lint:syntax": "node --check apps/api/src/server.mjs && node --check packages/cli/bin/audital.mjs"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "typescript": "5.8.3"
+  }
 }

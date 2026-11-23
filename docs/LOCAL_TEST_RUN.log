@@ -1,0 +1,186 @@
+
+> audital-observe-workspace@0.1.0 test
+> npm run build && node --test packages/*/tests/*.test.mjs apps/api/tests/*.test.mjs
+
+
+> audital-observe-workspace@0.1.0 build
+> tsc -p packages/observe-contract/tsconfig.json
+
+TAP version 13
+# Subtest: per-tenant data boundaries do not cross API-key ownership (development store)
+ok 1 - per-tenant data boundaries do not cross API-key ownership (development store)
+  ---
+  duration_ms: 1.223566
+  type: 'test'
+  ...
+# Subtest: envelope encryption binds to tenant+project as AAD
+ok 2 - envelope encryption binds to tenant+project as AAD
+  ---
+  duration_ms: 1.047969
+  type: 'test'
+  ...
+# Subtest: API admits claims, computes evidence, rejects caller assurance and exposes expiring share
+ok 3 - API admits claims, computes evidence, rejects caller assurance and exposes expiring share
+  ---
+  duration_ms: 86.73883
+  type: 'test'
+  ...
+# Subtest: read-only worker runs periodic reconciliation through injectable observation source
+ok 4 - read-only worker runs periodic reconciliation through injectable observation source
+  ---
+  duration_ms: 8.266599
+  type: 'test'
+  ...
+# Subtest: worker does not infer success when provider read fails
+ok 5 - worker does not infer success when provider read fails
+  ---
+  duration_ms: 1.793591
+  type: 'test'
+  ...
+# Subtest: Observe namespace forbids VERIFIED
+ok 6 - Observe namespace forbids VERIFIED
+  ---
+  duration_ms: 1.30509
+  type: 'test'
+  ...
+# Subtest: cannot inject caller assurance
+ok 7 - cannot inject caller assurance
+  ---
+  duration_ms: 0.162416
+  type: 'test'
+  ...
+# Subtest: correlation without exclusive causation rejected
+ok 8 - correlation without exclusive causation rejected
+  ---
+  duration_ms: 1.794722
+  type: 'test'
+  ...
+# Subtest: unknown fields and fake asserted VERIFIED rejected
+ok 9 - unknown fields and fake asserted VERIFIED rejected
+  ---
+  duration_ms: 0.259825
+  type: 'test'
+  ...
+# Subtest: incomplete evidence cannot produce correlated assurance
+ok 10 - incomplete evidence cannot produce correlated assurance
+  ---
+  duration_ms: 0.187464
+  type: 'test'
+  ...
+# Subtest: keyed identifiers differ between tenants
+ok 11 - keyed identifiers differ between tenants
+  ---
+  duration_ms: 1.317298
+  type: 'test'
+  ...
+# Subtest: parser strips raw arguments and target from persistent claim
+ok 12 - parser strips raw arguments and target from persistent claim
+  ---
+  duration_ms: 1.104695
+  type: 'test'
+  ...
+# Subtest: OTLP/JSON execute_tool span extracts only supported fields
+ok 13 - OTLP/JSON execute_tool span extracts only supported fields
+  ---
+  duration_ms: 0.528232
+  type: 'test'
+  ...
+# Subtest: caller supplied assurance rejected before storage
+ok 14 - caller supplied assurance rejected before storage
+  ---
+  duration_ms: 0.227916
+  type: 'test'
+  ...
+# Subtest: native OTel evaluation event does not say VERIFIED
+ok 15 - native OTel evaluation event does not say VERIFIED
+  ---
+  duration_ms: 0.283029
+  type: 'test'
+  ...
+# Subtest: phantom success requires grace window over and complete history
+ok 16 - phantom success requires grace window over and complete history
+  ---
+  duration_ms: 3.734174
+  type: 'test'
+  ...
+# Subtest: eventual consistency postpones phantom
+ok 17 - eventual consistency postpones phantom
+  ---
+  duration_ms: 0.25073
+  type: 'test'
+  ...
+# Subtest: unavailable or incomplete becomes UNOBSERVABLE, not phantom
+ok 18 - unavailable or incomplete becomes UNOBSERVABLE, not phantom
+  ---
+  duration_ms: 0.254325
+  type: 'test'
+  ...
+# Subtest: correlated event cannot claim exclusive causation
+ok 19 - correlated event cannot claim exclusive causation
+  ---
+  duration_ms: 0.328018
+  type: 'test'
+  ...
+# Subtest: state-only observation is not causality
+ok 20 - state-only observation is not causality
+  ---
+  duration_ms: 0.275638
+  type: 'test'
+  ...
+# Subtest: duplicate, late, partial effects flagged
+ok 21 - duplicate, late, partial effects flagged
+  ---
+  duration_ms: 0.222978
+  type: 'test'
+  ...
+# Subtest: wrong-target claim id is contradicted
+ok 22 - wrong-target claim id is contradicted
+  ---
+  duration_ms: 0.182286
+  type: 'test'
+  ...
+# Subtest: ghost write when provider changes without ingested claim
+ok 23 - ghost write when provider changes without ingested claim
+  ---
+  duration_ms: 0.184891
+  type: 'test'
+  ...
+# Subtest: failed claim but effect observed is ghost write
+ok 24 - failed claim but effect observed is ghost write
+  ---
+  duration_ms: 0.312234
+  type: 'test'
+  ...
+# Subtest: signing rotation verifies old and new, Guard domain cannot masquerade
+ok 25 - signing rotation verifies old and new, Guard domain cannot masquerade
+  ---
+  duration_ms: 10.820824
+  type: 'test'
+  ...
+# Subtest: GitHub Checks are formatted only, never posted
+ok 26 - GitHub Checks are formatted only, never posted
+  ---
+  duration_ms: 0.52063
+  type: 'test'
+  ...
+# Subtest: GitHub connector only GETs and returns incomplete when insufficient coverage
+ok 27 - GitHub connector only GETs and returns incomplete when insufficient coverage
+  ---
+  duration_ms: 1.223977
+  type: 'test'
+  ...
+# Subtest: Stripe paged event read remains conservative about history
+ok 28 - Stripe paged event read remains conservative about history
+  ---
+  duration_ms: 0.426247
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 240.856835

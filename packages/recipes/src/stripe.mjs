@@ -7,7 +7,7 @@ export async function readStripeEvents({token,hmacKey,coverageStart,fetcher=fetc
  try{
   for(let page=0;page<maxPages;page++){
    const url=new URL('https://api.stripe.com/v1/events');url.searchParams.set('limit','100');if(startingAfter)url.searchParams.set('starting_after',startingAfter);
-   const r=await fetcher(url,{method:'GET',headers:{Authorization:`Bearer ${token}`}});
+   const r=await fetcher(url,{method:'GET',redirect:'error',headers:{Authorization:`Bearer ${token}`}});
    if(!r.ok)throw Error(`STRIPE_READ_UNAVAILABLE_${r.status}`);
    const x=await r.json();if(!Array.isArray(x.data))throw Error('STRIPE_EVENT_SHAPE_INVALID');
    events.push(...x.data);

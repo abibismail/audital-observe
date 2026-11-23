@@ -1,0 +1,19 @@
+
+> audital-observe-workspace@0.1.0 demo:phantom-success
+> npm run build && node packages/cli/bin/audital.mjs reconcile --demo
+
+
+> audital-observe-workspace@0.1.0 build
+> tsc -p packages/observe-contract/tsconfig.json
+
+NOTICE: ephemeral HMAC key; cross-run hashes will differ. Set AUDITAL_HMAC_KEY for stable project joins.
+CONTRADICTED       PHANTOM_SUCCESS demo-claimed-success
+  Can assert: readback does not match expected state
+  Cannot assert: exclusive causation; no same-identity competitor; whether an external writer changed the final state
+EFFECT_CORRELATED  (no discrepancy) demo-correlated
+  Can assert: matching provider event observed; provider event and claim target hashes agree
+  Cannot assert: exclusive causation; no same-identity competitor
+CONTRADICTED       GHOST_WRITE (unclaimed event)
+  Can assert: provider effect without matching ingested claim
+  Cannot assert: exclusive causation; no same-identity competitor; whether an external writer changed the final state
+Evidence pack key: b0ea7bc641a4b8f3098d7985; results: 3; fixture: true

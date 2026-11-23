@@ -4,7 +4,7 @@ const API='https://api.github.com';
 function allowedNext(u){const url=new URL(u);if(url.origin!==API || !url.pathname.startsWith('/repos/'))throw Error('PAGINATION_ORIGIN_DENIED');return url;}
 async function getJSON(path,token,fetcher){
  const url=allowedNext(path.startsWith('https:')?path:`${API}${path}`);
- const r=await fetcher(url,{method:'GET',headers:{'Accept':'application/vnd.github+json','User-Agent':'audital-observe-readonly','Authorization':`Bearer ${token}`}});
+ const r=await fetcher(url,{method:'GET',redirect:'error',headers:{'Accept':'application/vnd.github+json','User-Agent':'audital-observe-readonly','Authorization':`Bearer ${token}`}});
  if(!r.ok)throw Error(`GITHUB_READ_UNAVAILABLE_${r.status}`);return {data:await r.json(),next:/<([^>]+)>; rel="next"/.exec(r.headers.get('link')||'')?.[1]||null};
 }
 export async function readGithubIssue({target,token,hmacKey,coverageStart,fetcher=fetch,maxPages=10}){

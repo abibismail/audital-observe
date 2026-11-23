@@ -19,3 +19,19 @@ test('API admits claims, computes evidence, rejects caller assurance and exposes
  const mon=await (await post('/v1/monitors',{provider:'github',interval_seconds:60})).json();assert.equal(mon.enabled,false);
  const metrics=await (await fetch(root+'/v1/metrics',{headers:{'x-api-key':key}})).json();assert.equal(metrics.ingested,1);assert.equal(metrics.discrepancies,1);
 });
+test('read-only worker runs periodic reconciliation through injectable observation source',async()=>{
+ const {ObserveWorker}=await import('../src/worker.mjs');const {ObserveSigner}=await import('../../../packages/recipes/src/signing.mjs');
+ const store=new DevTenantStore(),secret='q'.repeat(40);store.provision('worker-tenant','worker-project',secret);const tenant=store.authenticate(secret);
+ store.saveClaim(tenant,{claim_id:'worker-1',provider:'github',target_hash:'abc',occurred_at:'2026-11-20T10:00:00Z',claimed_success:true,expected_state:'closed'});
+ const signer=new ObserveSigner();signer.rotate();let called=0;
+ const worker=new ObserveWorker({store,signer,now:()=>Date.parse('2026-11-20T12:00:00Z'),readObservation:async()=>{called++;return {available:true,complete:true,coverage_start:'2026-11-20T09:00:00Z',observed_at:'2026-11-20T12:00:00Z',current_state:'open',events:[]}}});
+ const m={id:'monitor-1',provider:'github',enabled:true,interval_seconds:60};const r=await worker.tick(tenant,m);assert.equal(r.status,'RECORDED');assert.equal(called,1);assert.equal(tenant.counters.discrepancies,1);
+ const r2=await worker.tick(tenant,m);assert.equal(r2.status,'RECORDED');assert.equal(tenant.counters.repeat_reconciliations,1);
+ const stop=worker.start(tenant,m);assert.equal(stop(),true);assert.equal(worker.stop(m.id),false);
+});
+test('worker does not infer success when provider read fails',async()=>{
+ const {ObserveWorker}=await import('../src/worker.mjs');const {ObserveSigner}=await import('../../../packages/recipes/src/signing.mjs');
+ const store=new DevTenantStore(),secret='r'.repeat(40);store.provision('t','p',secret);const tenant=store.authenticate(secret);store.saveClaim(tenant,{claim_id:'worker-2',provider:'github',target_hash:'abc',occurred_at:'2026-11-20T10:00:00Z',claimed_success:true,expected_state:'closed'});
+ const signer=new ObserveSigner();signer.rotate();const worker=new ObserveWorker({store,signer,readObservation:async()=>{throw Error('provider unavailable')}});
+ const r=await worker.tick(tenant,{id:'m2',provider:'github',enabled:true});const signed=store.getReport(tenant,r.id).signed;assert.equal(signed[0].payload.result.assurance,'UNOBSERVABLE');assert.deepEqual(signed[0].payload.result.findings,[]);
+});
