@@ -1,0 +1,2 @@
+{"claim_id":"demo-claimed-success","name":"execute_tool","action":"github.issue.close","provider":"github","target":"acme/sandbox#123","occurred_at":"2026-11-20T12:00:00.000Z","args":{"issue":123,"state":"closed"},"claimed_success":true,"expected_state":"closed","actor":"demo-agent"}
+{"claim_id":"demo-correlated","name":"execute_tool","action":"github.issue.close","provider":"github","target":"acme/sandbox#125","occurred_at":"2026-11-20T12:01:00.000Z","args":{"issue":125,"state":"closed"},"claimed_success":true,"expected_state":"closed","actor":"demo-agent"}

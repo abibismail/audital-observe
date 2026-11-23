@@ -1,0 +1,7 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {ASSURANCE,OBSERVE_DOMAIN,makeResult,validateResult,rejectCallerAssurance,assertObserveDomain} from '../dist/index.js';
+test('Observe namespace forbids VERIFIED',()=>{assert.ok(!ASSURANCE.includes('VERIFIED'));assert.equal(OBSERVE_DOMAIN,'audital.observe/v1');assert.throws(()=>assertObserveDomain('audital.guard/v1'))});
+test('cannot inject caller assurance',()=>{assert.throws(()=>rejectCallerAssurance({assurance:'VERIFIED'}));assert.throws(()=>rejectCallerAssurance({signature:'abc'}))});
+test('correlation without exclusive causation rejected',()=>{assert.throws(()=>makeResult({claim_id:'a',assurance:'EFFECT_CORRELATED',findings:[],asserts:[],cannot_assert:[],observed_at:new Date().toISOString(),target_hash:'h',observation_complete:true,reason_codes:[]}));});
+test('unknown fields and fake asserted VERIFIED rejected',()=>{let obj={schema:'audital.observe/v1',claim_id:'1',assurance:'CLAIMED',findings:[],asserts:['verified'],cannot_assert:[],observed_at:new Date().toISOString(),target_hash:'h',observation_complete:true,reason_codes:[]};assert.throws(()=>validateResult(obj));obj.asserts=[];obj.extra='yes';assert.throws(()=>validateResult(obj))});
+test('incomplete evidence cannot produce correlated assurance',()=>{assert.throws(()=>makeResult({claim_id:'a',assurance:'EFFECT_CORRELATED',findings:[],asserts:[],cannot_assert:['exclusive causation','no same-identity competitor'],observed_at:new Date().toISOString(),target_hash:'h',observation_complete:false,reason_codes:[]}));});

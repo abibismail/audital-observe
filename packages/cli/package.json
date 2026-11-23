@@ -1,0 +1,1 @@
+{"name":"audital","version":"0.1.0","type":"module","bin":{"audital":"./bin/audital.mjs"},"license":"Apache-2.0"}

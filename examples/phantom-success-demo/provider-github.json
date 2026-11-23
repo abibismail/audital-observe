@@ -1,0 +1,11 @@
+{
+  "available": true,
+  "complete": true,
+  "coverage_start": "2026-11-20T11:00:00.000Z",
+  "observed_at": "2026-11-20T12:05:00.000Z",
+  "states": {"acme/sandbox#123":"open", "acme/sandbox#125":"closed"},
+  "events": [
+    {"id":"event-125","kind":"closed","target":"acme/sandbox#125","time":"2026-11-20T12:01:10.000Z","actor":"demo-agent"},
+    {"id":"event-124","kind":"closed","target":"acme/sandbox#124","time":"2026-11-20T12:02:30.000Z","actor":"other-agent"}
+  ]
+}

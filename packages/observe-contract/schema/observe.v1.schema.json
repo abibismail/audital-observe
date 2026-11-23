@@ -1,0 +1,24 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://audital.ai/schemas/observe.v1.schema.json",
+  "title":"Audital Observe result (not Guard proof)",
+  "type":"object","additionalProperties":false,
+  "required":["schema","claim_id","assurance","findings","asserts","cannot_assert","observed_at","target_hash","observation_complete","reason_codes"],
+  "properties":{
+    "schema":{"const":"audital.observe/v1"},
+    "claim_id":{"type":["string","null"]},
+    "assurance":{"enum":["CLAIMED","EFFECT_OBSERVED","EFFECT_CORRELATED","CONTRADICTED","UNOBSERVABLE"]},
+    "findings":{"type":"array","uniqueItems":true,"items":{"enum":["PHANTOM_SUCCESS","GHOST_WRITE","DUPLICATE_EFFECT","WRONG_TARGET","PARTIAL_EFFECT","LATE_EFFECT"]}},
+    "asserts":{"type":"array","items":{"type":"string"}},
+    "cannot_assert":{"type":"array","items":{"type":"string"}},
+    "observed_at":{"type":"string","format":"date-time"},
+    "target_hash":{"type":["string","null"]},
+    "observation_complete":{"type":"boolean"},
+    "reason_codes":{"type":"array","items":{"type":"string"}}
+  },
+  "allOf":[
+    {"if":{"properties":{"assurance":{"const":"EFFECT_CORRELATED"}}},"then":{"properties":{"cannot_assert":{"contains":{"const":"exclusive causation"}}}}},
+    {"if":{"properties":{"assurance":{"const":"EFFECT_OBSERVED"}}},"then":{"properties":{"cannot_assert":{"contains":{"const":"no same-identity competitor"}}}}},
+    {"if":{"properties":{"observation_complete":{"const":false}}}},"then":{"properties":{"assurance":{"enum":["UNOBSERVABLE","CLAIMED"]}}}}
+  ]
+}
