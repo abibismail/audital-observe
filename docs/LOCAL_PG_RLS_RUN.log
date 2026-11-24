@@ -1,0 +1,93 @@
+
+> audital-observe-workspace@0.2.0 test:pg
+> npm run build && node scripts/test-pg.mjs
+
+
+> audital-observe-workspace@0.2.0 build
+> tsc -p packages/observe-contract/tsconfig.json
+
+[test:pg] started postgres:16-alpine as audital-observe-pg-bfaa400f on 127.0.0.1:49918
+[test:pg] PostgreSQL 16.15 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+TAP version 13
+# Subtest: migrations are idempotent and checksum-protected
+ok 1 - migrations are idempotent and checksum-protected
+  ---
+  duration_ms: 108.609375
+  type: 'test'
+  ...
+# Subtest: app role posture: not superuser, NOBYPASSRLS, owns nothing; every observe table has FORCE RLS
+ok 2 - app role posture: not superuser, NOBYPASSRLS, owns nothing; every observe table has FORCE RLS
+  ---
+  duration_ms: 1.52275
+  type: 'test'
+  ...
+# Subtest: no tenant context => no rows and no writes
+ok 3 - no tenant context => no rows and no writes
+  ---
+  duration_ms: 9.832417
+  type: 'test'
+  ...
+# Subtest: Tenant B cannot read Tenant A claims, findings, evidence packs, monitors, shares, alerts or secrets
+ok 4 - Tenant B cannot read Tenant A claims, findings, evidence packs, monitors, shares, alerts or secrets
+  ---
+  duration_ms: 41.02775
+  type: 'test'
+  ...
+# Subtest: Tenant B cannot mutate Tenant A rows (UPDATE/DELETE affect 0 rows; cross-tenant INSERT rejected)
+ok 5 - Tenant B cannot mutate Tenant A rows (UPDATE/DELETE affect 0 rows; cross-tenant INSERT rejected)
+  ---
+  duration_ms: 10.449792
+  type: 'test'
+  ...
+# Subtest: evidence packs and findings are append-only, even for their own tenant and the superuser
+ok 6 - evidence packs and findings are append-only, even for their own tenant and the superuser
+  ---
+  duration_ms: 7.305042
+  type: 'test'
+  ...
+# Subtest: RLS cannot be bypassed by the app role
+ok 7 - RLS cannot be bypassed by the app role
+  ---
+  duration_ms: 4.504541
+  type: 'test'
+  ...
+# Subtest: transaction-local identity never leaks across pooled connections
+ok 8 - transaction-local identity never leaks across pooled connections
+  ---
+  duration_ms: 5.490625
+  type: 'test'
+  ...
+# Subtest: same claim_id in two tenants does not collide (no cross-tenant existence oracle)
+ok 9 - same claim_id in two tenants does not collide (no cross-tenant existence oracle)
+  ---
+  duration_ms: 6.554625
+  type: 'test'
+  ...
+# Subtest: shares expire by DB clock; scheduler lease exposes metadata only; B cannot complete A monitor
+ok 10 - shares expire by DB clock; scheduler lease exposes metadata only; B cannot complete A monitor
+  ---
+  duration_ms: 12.066209
+  type: 'test'
+  ...
+# Subtest: signed evidence survives jsonb key reordering and still verifies
+ok 11 - signed evidence survives jsonb key reordering and still verifies
+  ---
+  duration_ms: 4.926834
+  type: 'test'
+  ...
+# Subtest: end-to-end HTTP API on PostgreSQL: ingest -> engine -> evidence; other tenant and sibling project get 404
+ok 12 - end-to-end HTTP API on PostgreSQL: ingest -> engine -> evidence; other tenant and sibling project get 404
+  ---
+  duration_ms: 50.939708
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 334.412583
+[test:pg] removed audital-observe-pg-bfaa400f

@@ -1,5 +1,6 @@
 import {makeResult, rejectCallerAssurance} from '../../observe-contract/dist/index.js';
 const CAUSAL = ['exclusive causation','no same-identity competitor'];
+export const CAUSATION_CANNOT_ASSERT = CAUSAL;
 const LIMITS = [...CAUSAL,'provider event completeness beyond inspected window','external mutations outside this read-only connector'];
 const stamp = () => new Date().toISOString();
 function safeTime(s){const t=Date.parse(s||'');return Number.isFinite(t)?t:null;}
@@ -40,8 +41,9 @@ export function reconcile(claim,observation,{now=Date.now(),graceMs=60000,deadli
     return create(claim,'CONTRADICTED',findings,['readback does not match expected state'],reasons,true,seen);
   }
   if(!stateMatches && state!==undefined){
-    if(claim.claimed_success){findings.push('PHANTOM_SUCCESS');}
-    reasons.push('FINAL_STATE_CONTRADICTS_EXPECTED');
+    // A matching effect WAS observed, then the final state diverged (e.g. reopened by someone else).
+    // That is a contradiction of the end state, not a phantom: the claimed effect did happen.
+    reasons.push('FINAL_STATE_CONTRADICTS_EXPECTED','EFFECT_OBSERVED_THEN_STATE_DIVERGED');
     return create(claim,'CONTRADICTED',findings,['current readback contradicts expected state'],reasons,true,seen);
   }
   if(effects.length) return create(claim,'EFFECT_CORRELATED',findings,['matching provider event observed','provider event and claim target hashes agree'],reasons,true,seen);

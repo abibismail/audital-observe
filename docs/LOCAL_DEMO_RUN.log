@@ -1,9 +1,9 @@
 
-> audital-observe-workspace@0.1.0 demo:phantom-success
+> audital-observe-workspace@0.2.0 demo:phantom-success
 > npm run build && node packages/cli/bin/audital.mjs reconcile --demo
 
 
-> audital-observe-workspace@0.1.0 build
+> audital-observe-workspace@0.2.0 build
 > tsc -p packages/observe-contract/tsconfig.json
 
 NOTICE: ephemeral HMAC key; cross-run hashes will differ. Set AUDITAL_HMAC_KEY for stable project joins.
@@ -16,4 +16,4 @@ EFFECT_CORRELATED  (no discrepancy) demo-correlated
 CONTRADICTED       GHOST_WRITE (unclaimed event)
   Can assert: provider effect without matching ingested claim
   Cannot assert: exclusive causation; no same-identity competitor; whether an external writer changed the final state
-Evidence pack key: b0ea7bc641a4b8f3098d7985; results: 3; fixture: true
+Evidence pack d12b4abf-a821-4871-baf8-2756c356fbbf key: local:0977483e942ceb0771909660; attestation: local_unattested; results: 3; fixture: true

@@ -1,6 +1,6 @@
 {
   "name": "audital-observe-workspace",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -12,13 +12,18 @@
   },
   "scripts": {
     "build": "tsc -p packages/observe-contract/tsconfig.json",
-    "test": "npm run build && node --test packages/*/tests/*.test.mjs apps/api/tests/*.test.mjs",
+    "test": "npm run build && node --test packages/*/tests/*.test.mjs apps/api/tests/*.test.mjs tests/*.test.mjs",
+    "test:pg": "npm run build && node scripts/test-pg.mjs",
+    "test:all": "npm test && npm run test:pg",
+    "test:live-github": "npm run build && node --test apps/api/tests/live/github.live.test.mjs",
     "demo:phantom-success": "npm run build && node packages/cli/bin/audital.mjs reconcile --demo",
     "api:dev": "npm run build && node apps/api/src/server.mjs",
-    "lint:syntax": "node --check apps/api/src/server.mjs && node --check packages/cli/bin/audital.mjs"
+    "db:migrate": "node apps/api/src/db/admin.mjs migrate",
+    "lint:syntax": "node --check apps/api/src/server.mjs && node --check apps/api/src/worker.mjs && node --check apps/api/src/db/pg-store.mjs && node --check packages/cli/bin/audital.mjs"
   },
   "license": "Apache-2.0",
   "devDependencies": {
+    "ajv": "8.17.1",
     "typescript": "5.8.3"
   }
 }

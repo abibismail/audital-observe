@@ -1,186 +1,426 @@
 
-> audital-observe-workspace@0.1.0 test
-> npm run build && node --test packages/*/tests/*.test.mjs apps/api/tests/*.test.mjs
+> audital-observe-workspace@0.2.0 test
+> npm run build && node --test packages/*/tests/*.test.mjs apps/api/tests/*.test.mjs tests/*.test.mjs
 
 
-> audital-observe-workspace@0.1.0 build
+> audital-observe-workspace@0.2.0 build
 > tsc -p packages/observe-contract/tsconfig.json
 
 TAP version 13
-# Subtest: per-tenant data boundaries do not cross API-key ownership (development store)
-ok 1 - per-tenant data boundaries do not cross API-key ownership (development store)
+# Subtest: dev store: per-tenant/project boundaries are enforced by context
+ok 1 - dev store: per-tenant/project boundaries are enforced by context
   ---
-  duration_ms: 1.223566
+  duration_ms: 2.389833
   type: 'test'
   ...
-# Subtest: envelope encryption binds to tenant+project as AAD
-ok 2 - envelope encryption binds to tenant+project as AAD
+# Subtest: envelope vault binds to tenant+project as AAD with a KEYED binding tag
+ok 2 - envelope vault binds to tenant+project as AAD with a KEYED binding tag
   ---
-  duration_ms: 1.047969
+  duration_ms: 0.813084
   type: 'test'
   ...
-# Subtest: API admits claims, computes evidence, rejects caller assurance and exposes expiring share
-ok 3 - API admits claims, computes evidence, rejects caller assurance and exposes expiring share
+# Subtest: API: claims, local fixture evidence, caller assurance rejected, expiring share, GitHub payloads
+ok 3 - API: claims, local fixture evidence, caller assurance rejected, expiring share, GitHub payloads
   ---
-  duration_ms: 86.73883
+  duration_ms: 43.322459
   type: 'test'
   ...
-# Subtest: read-only worker runs periodic reconciliation through injectable observation source
-ok 4 - read-only worker runs periodic reconciliation through injectable observation source
+# Subtest: continuous engine: OTLP ingest -> scheduled read-only GitHub readback -> signed pack -> Slack + signed webhook alerts with expiring link
+ok 4 - continuous engine: OTLP ingest -> scheduled read-only GitHub readback -> signed pack -> Slack + signed webhook alerts with expiring link
   ---
-  duration_ms: 8.266599
+  duration_ms: 11.701042
+  type: 'test'
+  ...
+# Subtest: engine: write-capable token is refused -> UNOBSERVABLE, retried with backoff, never alerts
+ok 5 - engine: write-capable token is refused -> UNOBSERVABLE, retried with backoff, never alerts
+  ---
+  duration_ms: 0.737292
+  type: 'test'
+  ...
+# Subtest: hosted signer: scheduled evidence is hosted_attested; caller fixtures are refused
+ok 6 - hosted signer: scheduled evidence is hosted_attested; caller fixtures are refused
+  ---
+  duration_ms: 3.548417
+  type: 'test'
+  ...
+# Subtest: cross-tenant access through the API is denied (dev store)
+ok 7 - cross-tenant access through the API is denied (dev store)
+  ---
+  duration_ms: 3.687958
+  type: 'test'
+  ...
+# Subtest: internal errors are not echoed to clients
+ok 8 - internal errors are not echoed to clients
+  ---
+  duration_ms: 1.901709
   type: 'test'
   ...
 # Subtest: worker does not infer success when provider read fails
-ok 5 - worker does not infer success when provider read fails
+ok 9 - worker does not infer success when provider read fails
   ---
-  duration_ms: 1.793591
+  duration_ms: 0.457959
   type: 'test'
   ...
-# Subtest: Observe namespace forbids VERIFIED
-ok 6 - Observe namespace forbids VERIFIED
+# Subtest: alert endpoint SSRF guard
+ok 10 - alert endpoint SSRF guard
   ---
-  duration_ms: 1.30509
+  duration_ms: 0.253792
   type: 'test'
   ...
-# Subtest: cannot inject caller assurance
-ok 7 - cannot inject caller assurance
+# Subtest: Observe namespace forbids the Guard-only status
+ok 11 - Observe namespace forbids the Guard-only status
   ---
-  duration_ms: 0.162416
+  duration_ms: 0.743667
+  type: 'test'
+  ...
+# Subtest: cannot inject caller assurance or attestation
+ok 12 - cannot inject caller assurance or attestation
+  ---
+  duration_ms: 0.105417
   type: 'test'
   ...
 # Subtest: correlation without exclusive causation rejected
-ok 8 - correlation without exclusive causation rejected
+ok 13 - correlation without exclusive causation rejected
   ---
-  duration_ms: 1.794722
+  duration_ms: 0.084209
   type: 'test'
   ...
-# Subtest: unknown fields and fake asserted VERIFIED rejected
-ok 9 - unknown fields and fake asserted VERIFIED rejected
+# Subtest: both causation limits required for EFFECT_CORRELATED and EFFECT_OBSERVED (contract)
+ok 14 - both causation limits required for EFFECT_CORRELATED and EFFECT_OBSERVED (contract)
   ---
-  duration_ms: 0.259825
+  duration_ms: 0.435417
+  type: 'test'
+  ...
+# Subtest: unknown fields and Guard-only words anywhere are rejected
+ok 15 - unknown fields and Guard-only words anywhere are rejected
+  ---
+  duration_ms: 0.105166
   type: 'test'
   ...
 # Subtest: incomplete evidence cannot produce correlated assurance
-ok 10 - incomplete evidence cannot produce correlated assurance
+ok 16 - incomplete evidence cannot produce correlated assurance
   ---
-  duration_ms: 0.187464
+  duration_ms: 0.047292
   type: 'test'
   ...
-# Subtest: keyed identifiers differ between tenants
-ok 11 - keyed identifiers differ between tenants
+# Subtest: JSON schema matches contract: both causation limits required, incomplete cannot overclaim
+ok 17 - JSON schema matches contract: both causation limits required, incomplete cannot overclaim
   ---
-  duration_ms: 1.317298
+  duration_ms: 0.359709
   type: 'test'
   ...
-# Subtest: parser strips raw arguments and target from persistent claim
-ok 12 - parser strips raw arguments and target from persistent claim
+# Subtest: envelope v2: attestation enum, payload binding, schema parity
+ok 18 - envelope v2: attestation enum, payload binding, schema parity
   ---
-  duration_ms: 1.104695
+  duration_ms: 0.880666
   type: 'test'
   ...
-# Subtest: OTLP/JSON execute_tool span extracts only supported fields
-ok 13 - OTLP/JSON execute_tool span extracts only supported fields
+# Subtest: keyed identifiers differ between keys; short keys refused
+ok 19 - keyed identifiers differ between keys; short keys refused
   ---
-  duration_ms: 0.528232
+  duration_ms: 0.735708
   type: 'test'
   ...
-# Subtest: caller supplied assurance rejected before storage
-ok 14 - caller supplied assurance rejected before storage
+# Subtest: per-project keys: same target in two projects never joins
+ok 20 - per-project keys: same target in two projects never joins
   ---
-  duration_ms: 0.227916
+  duration_ms: 0.436542
   type: 'test'
   ...
-# Subtest: native OTel evaluation event does not say VERIFIED
-ok 15 - native OTel evaluation event does not say VERIFIED
+# Subtest: small-domain identifiers cannot be reversed by enumeration without the key
+ok 21 - small-domain identifiers cannot be reversed by enumeration without the key
   ---
-  duration_ms: 0.283029
+  duration_ms: 26.342875
+  type: 'test'
+  ...
+# Subtest: canonical targets join case/URL variants before hashing
+ok 22 - canonical targets join case/URL variants before hashing
+  ---
+  duration_ms: 0.226
+  type: 'test'
+  ...
+# Subtest: parser strips raw arguments and target from persistent claim; args hashed canonically
+ok 23 - parser strips raw arguments and target from persistent claim; args hashed canonically
+  ---
+  duration_ms: 1.324875
+  type: 'test'
+  ...
+# Subtest: semconv execute_tool span: gen_ai.tool.name, gen_ai.tool.call.id, trace context, GitHub MCP target inference
+ok 24 - semconv execute_tool span: gen_ai.tool.name, gen_ai.tool.call.id, trace context, GitHub MCP target inference
+  ---
+  duration_ms: 0.384
+  type: 'test'
+  ...
+# Subtest: gen_ai.tool.call.arguments as structured kvlist AnyValue
+ok 25 - gen_ai.tool.call.arguments as structured kvlist AnyValue
+  ---
+  duration_ms: 0.237375
+  type: 'test'
+  ...
+# Subtest: error.type or ERROR status marks claimed_success=false
+ok 26 - error.type or ERROR status marks claimed_success=false
+  ---
+  duration_ms: 0.431042
+  type: 'test'
+  ...
+# Subtest: invoke_agent / chat spans are not tool effects; unknown effects are skipped, not guessed
+ok 27 - invoke_agent / chat spans are not tool effects; unknown effects are skipped, not guessed
+  ---
+  duration_ms: 0.356625
+  type: 'test'
+  ...
+# Subtest: Claude Code beta tracing: claude_code.tool + child claude_code.tool.execution success
+ok 28 - Claude Code beta tracing: claude_code.tool + child claude_code.tool.execution success
+  ---
+  duration_ms: 0.315584
+  type: 'test'
+  ...
+# Subtest: LangSmith, Langfuse and OpenInference tool spans map to claims
+ok 29 - LangSmith, Langfuse and OpenInference tool spans map to claims
+  ---
+  duration_ms: 0.201875
+  type: 'test'
+  ...
+# Subtest: OTLP logs: claude_code.tool_result and codex.tool_result events
+ok 30 - OTLP logs: claude_code.tool_result and codex.tool_result events
+  ---
+  duration_ms: 0.209833
+  type: 'test'
+  ...
+# Subtest: legacy OTLP/JSON execute_tool span with audital.* attributes still parses
+ok 31 - legacy OTLP/JSON execute_tool span with audital.* attributes still parses
+  ---
+  duration_ms: 0.065167
+  type: 'test'
+  ...
+# Subtest: caller supplied assurance rejected before storage (JSONL and OTLP attribute)
+ok 32 - caller supplied assurance rejected before storage (JSONL and OTLP attribute)
+  ---
+  duration_ms: 0.079083
+  type: 'test'
+  ...
+# Subtest: overlong targets are rejected, never silently truncated into collisions
+ok 33 - overlong targets are rejected, never silently truncated into collisions
+  ---
+  duration_ms: 0.04225
+  type: 'test'
+  ...
+# Subtest: gen_ai.evaluation.result event follows semconv and is parented to the tool span
+ok 34 - gen_ai.evaluation.result event follows semconv and is parented to the tool span
+  ---
+  duration_ms: 0.200167
+  type: 'test'
+  ...
+# Subtest: local signer can never emit hosted_attested
+ok 35 - local signer can never emit hosted_attested
+  ---
+  duration_ms: 3.519333
+  type: 'test'
+  ...
+# Subtest: relabelling a local envelope as hosted_attested fails verification
+ok 36 - relabelling a local envelope as hosted_attested fails verification
+  ---
+  duration_ms: 0.343291
+  type: 'test'
+  ...
+# Subtest: hosted signer requires a key pinned in the trust registry
+ok 37 - hosted signer requires a key pinned in the trust registry
+  ---
+  duration_ms: 1.473458
+  type: 'test'
+  ...
+# Subtest: hosted_attested NEVER verifies against embedded/local keys, only the pinned registry
+ok 38 - hosted_attested NEVER verifies against embedded/local keys, only the pinned registry
+  ---
+  duration_ms: 0.706875
+  type: 'test'
+  ...
+# Subtest: registry refuses local: kids; default registry ships empty
+ok 39 - registry refuses local: kids; default registry ships empty
+  ---
+  duration_ms: 0.113333
+  type: 'test'
+  ...
+# Subtest: signatures survive key reordering (PostgreSQL jsonb round-trip)
+ok 40 - signatures survive key reordering (PostgreSQL jsonb round-trip)
+  ---
+  duration_ms: 0.373958
+  type: 'test'
+  ...
+# Subtest: tampering with any nested result field breaks the signature
+ok 41 - tampering with any nested result field breaks the signature
+  ---
+  duration_ms: 0.223959
   type: 'test'
   ...
 # Subtest: phantom success requires grace window over and complete history
-ok 16 - phantom success requires grace window over and complete history
+ok 42 - phantom success requires grace window over and complete history
   ---
-  duration_ms: 3.734174
+  duration_ms: 1.713333
   type: 'test'
   ...
 # Subtest: eventual consistency postpones phantom
-ok 17 - eventual consistency postpones phantom
+ok 43 - eventual consistency postpones phantom
   ---
-  duration_ms: 0.25073
+  duration_ms: 0.198542
   type: 'test'
   ...
 # Subtest: unavailable or incomplete becomes UNOBSERVABLE, not phantom
-ok 18 - unavailable or incomplete becomes UNOBSERVABLE, not phantom
+ok 44 - unavailable or incomplete becomes UNOBSERVABLE, not phantom
   ---
-  duration_ms: 0.254325
+  duration_ms: 0.139834
   type: 'test'
   ...
-# Subtest: correlated event cannot claim exclusive causation
-ok 19 - correlated event cannot claim exclusive causation
+# Subtest: EFFECT_CORRELATED always carries both causation limits
+ok 45 - EFFECT_CORRELATED always carries both causation limits
   ---
-  duration_ms: 0.328018
+  duration_ms: 0.200416
   type: 'test'
   ...
 # Subtest: state-only observation is not causality
-ok 20 - state-only observation is not causality
+ok 46 - state-only observation is not causality
   ---
-  duration_ms: 0.275638
+  duration_ms: 0.121875
   type: 'test'
   ...
 # Subtest: duplicate, late, partial effects flagged
-ok 21 - duplicate, late, partial effects flagged
+ok 47 - duplicate, late, partial effects flagged
   ---
-  duration_ms: 0.222978
+  duration_ms: 0.1275
   type: 'test'
   ...
 # Subtest: wrong-target claim id is contradicted
-ok 22 - wrong-target claim id is contradicted
+ok 48 - wrong-target claim id is contradicted
   ---
-  duration_ms: 0.182286
+  duration_ms: 0.091042
   type: 'test'
   ...
 # Subtest: ghost write when provider changes without ingested claim
-ok 23 - ghost write when provider changes without ingested claim
+ok 49 - ghost write when provider changes without ingested claim
   ---
-  duration_ms: 0.184891
+  duration_ms: 0.079625
   type: 'test'
   ...
 # Subtest: failed claim but effect observed is ghost write
-ok 24 - failed claim but effect observed is ghost write
+ok 50 - failed claim but effect observed is ghost write
   ---
-  duration_ms: 0.312234
+  duration_ms: 0.243541
   type: 'test'
   ...
-# Subtest: signing rotation verifies old and new, Guard domain cannot masquerade
-ok 25 - signing rotation verifies old and new, Guard domain cannot masquerade
+# Subtest: effect observed then reverted by someone else is CONTRADICTED but not PHANTOM_SUCCESS (v0.1 bug)
+ok 51 - effect observed then reverted by someone else is CONTRADICTED but not PHANTOM_SUCCESS (v0.1 bug)
   ---
-  duration_ms: 10.820824
+  duration_ms: 0.280958
   type: 'test'
   ...
-# Subtest: GitHub Checks are formatted only, never posted
-ok 26 - GitHub Checks are formatted only, never posted
+# Subtest: local signer: rotation verifies old and new, Guard domain cannot masquerade, attestation is local_unattested
+ok 52 - local signer: rotation verifies old and new, Guard domain cannot masquerade, attestation is local_unattested
   ---
-  duration_ms: 0.52063
+  duration_ms: 2.685458
+  type: 'test'
+  ...
+# Subtest: GitHub Check + PR comment payloads: crisp, linked, formatted only
+ok 53 - GitHub Check + PR comment payloads: crisp, linked, formatted only
+  ---
+  duration_ms: 0.401792
   type: 'test'
   ...
 # Subtest: GitHub connector only GETs and returns incomplete when insufficient coverage
-ok 27 - GitHub connector only GETs and returns incomplete when insufficient coverage
+ok 54 - GitHub connector only GETs and returns incomplete when insufficient coverage
   ---
-  duration_ms: 1.223977
+  duration_ms: 1.508291
   type: 'test'
   ...
-# Subtest: Stripe paged event read remains conservative about history
-ok 28 - Stripe paged event read remains conservative about history
+# Subtest: GitHub connector: Link-header pagination, coverage anchored at issue created_at
+ok 55 - GitHub connector: Link-header pagination, coverage anchored at issue created_at
   ---
-  duration_ms: 0.426247
+  duration_ms: 0.923541
   type: 'test'
   ...
-1..28
-# tests 28
+# Subtest: GitHub connector: pagination cut off by maxPages is incomplete -> UNOBSERVABLE
+ok 56 - GitHub connector: pagination cut off by maxPages is incomplete -> UNOBSERVABLE
+  ---
+  duration_ms: 1.152959
+  type: 'test'
+  ...
+# Subtest: GitHub connector: primary rate limit waits until reset then retries; secondary uses retry-after
+ok 57 - GitHub connector: primary rate limit waits until reset then retries; secondary uses retry-after
+  ---
+  duration_ms: 0.207625
+  type: 'test'
+  ...
+# Subtest: GitHub connector: rate limit beyond maxWait degrades to UNOBSERVABLE with reason, never PHANTOM
+ok 58 - GitHub connector: rate limit beyond maxWait degrades to UNOBSERVABLE with reason, never PHANTOM
+  ---
+  duration_ms: 0.101
+  type: 'test'
+  ...
+# Subtest: GitHub connector: budget floor stops spending before reset
+ok 59 - GitHub connector: budget floor stops spending before reset
+  ---
+  duration_ms: 0.092125
+  type: 'test'
+  ...
+# Subtest: GitHub connector refuses classic tokens with write-capable scopes
+ok 60 - GitHub connector refuses classic tokens with write-capable scopes
+  ---
+  duration_ms: 0.236542
+  type: 'test'
+  ...
+# Subtest: GitHub connector requires a token or explicit anonymous mode, and an HMAC key
+ok 61 - GitHub connector requires a token or explicit anonymous mode, and an HMAC key
+  ---
+  duration_ms: 0.191708
+  type: 'test'
+  ...
+# Subtest: Stripe paged event read remains conservative about history (mocked)
+ok 62 - Stripe paged event read remains conservative about history (mocked)
+  ---
+  duration_ms: 0.169167
+  type: 'test'
+  ...
+# Subtest: GitHub connector follows numeric /repositories/<id> Link pagination (seen live) but refuses foreign origins
+ok 63 - GitHub connector follows numeric /repositories/<id> Link pagination (seen live) but refuses foreign origins
+  ---
+  duration_ms: 0.196625
+  type: 'test'
+  ...
+# Subtest: zero Guard dependencies: no package, lockfile entry or import references Guard
+ok 64 - zero Guard dependencies: no package, lockfile entry or import references Guard
+  ---
+  duration_ms: 2.882333
+  type: 'test'
+  ...
+# Subtest: the Guard-only status never exists in any schema, SQL migration, signer or contract build
+ok 65 - the Guard-only status never exists in any schema, SQL migration, signer or contract build
+  ---
+  duration_ms: 0.952167
+  type: 'test'
+  ...
+# Subtest: zero write credentials: only the notification dispatcher issues a non-GET request, and never to provider hosts
+ok 66 - zero write credentials: only the notification dispatcher issues a non-GET request, and never to provider hosts
+  ---
+  duration_ms: 2.843625
+  type: 'test'
+  ...
+# Subtest: EFFECT_CORRELATED / EFFECT_OBSERVED always carry both causation limits (randomized)
+ok 67 - EFFECT_CORRELATED / EFFECT_OBSERVED always carry both causation limits (randomized)
+  ---
+  duration_ms: 33.959917
+  type: 'test'
+  ...
+# Subtest: the CLI can only emit local_unattested evidence
+ok 68 - the CLI can only emit local_unattested evidence
+  ---
+  duration_ms: 7.932959
+  type: 'test'
+  ...
+1..68
+# tests 68
 # suites 0
-# pass 28
+# pass 68
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 240.856835
+# duration_ms 124.66725
