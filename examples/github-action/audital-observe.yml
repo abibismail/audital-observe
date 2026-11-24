@@ -1,0 +1,39 @@
+# CUSTOMER-SIDE example workflow. Audital never holds a GitHub write credential: this workflow publishes
+# the Check Run / PR comment with YOUR repository's own short-lived GITHUB_TOKEN.
+# Copy to .github/workflows/audital-observe.yml in the repo whose agent traces you reconcile.
+name: audital-observe
+on: [pull_request]
+permissions:
+  contents: read
+  checks: write          # to publish the Check Run
+  pull-requests: write   # to upsert the PR comment (optional)
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      # Option A (local, attestation=local_unattested): reconcile spans produced by your agent run.
+      - name: Reconcile agent claims against read-only GitHub readback
+        env:
+          AUDITAL_HMAC_KEY: ${{ secrets.AUDITAL_HMAC_KEY }}      # per-project secret, >= 32 bytes
+          GITHUB_READ_TOKEN: ${{ secrets.AUDITAL_READ_TOKEN }}   # fine-grained, Issues:read + Metadata:read ONLY
+        run: |
+          npx --yes audital reconcile --claims agent-spans.jsonl --provider github \
+            --check-out check.json --pr-comment-out comment.json --head-sha "${{ github.event.pull_request.head.sha }}" \
+            --fail-on phantom,ghost,wrong-target || echo "exit=$?" >> "$GITHUB_OUTPUT"
+      # Option B (hosted, attestation=hosted_attested once available): fetch payloads with a signed expiring link:
+      #   curl -fsS -X POST -H "x-api-key: $AUDITAL_API_KEY" -H 'content-type: application/json' \
+      #     -d "{\"head_sha\":\"$SHA\"}" "$AUDITAL_URL/v1/evidence/$PACK_ID/github" > payloads.json
+      - name: Publish Check Run with the workflow's own token
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: gh api "repos/${{ github.repository }}/check-runs" --method POST --input check.json
+      - name: Upsert PR comment (marker-based, no duplicates)
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          marker='<!-- audital-observe:evidence v0.2 -->'
+          id=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" --paginate \
+               --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n1)
+          if [ -n "$id" ]; then gh api "repos/${{ github.repository }}/issues/comments/$id" --method PATCH --input comment.json
+          else gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" --method POST --input comment.json; fi

@@ -1,0 +1,5 @@
+{
+  "schema": "audital.observe.trust-registry/v1",
+  "note": "Pinned public keys of the Audital hosted service. Only envelopes signed by a key listed here may verify as hosted_attested. Empty until the hosted service key ceremony is complete (see docs/PRODUCTION_GATES.md gate 7). Embedded/pack-supplied keys are NEVER consulted for hosted_attested.",
+  "keys": []
+}

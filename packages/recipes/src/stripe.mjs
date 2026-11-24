@@ -3,6 +3,9 @@
 import {hmacIdentifier} from '../../otel-parser/src/index.mjs';
 export async function readStripeEvents({token,hmacKey,coverageStart,fetcher=fetch,maxPages=10}){
  if(!token||!hmacKey)throw Error('READ_KEY_AND_HMAC_REQUIRED');
+ // Zero write credentials: Stripe secret keys (sk_*) can move money. Only restricted keys (rk_*) scoped to
+ // Events:read are accepted. (Stripe stays mocked in v0.2; GitHub is the live wedge.)
+ if(!/^rk_(test|live)_/.test(String(token)))throw Error('STRIPE_RESTRICTED_READ_KEY_REQUIRED');
  let events=[],startingAfter=null,complete=true;
  try{
   for(let page=0;page<maxPages;page++){

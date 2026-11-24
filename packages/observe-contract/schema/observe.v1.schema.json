@@ -8,7 +8,7 @@
     "schema":{"const":"audital.observe/v1"},
     "claim_id":{"type":["string","null"]},
     "assurance":{"enum":["CLAIMED","EFFECT_OBSERVED","EFFECT_CORRELATED","CONTRADICTED","UNOBSERVABLE"]},
-    "findings":{"type":"array","uniqueItems":true,"items":{"enum":["PHANTOM_SUCCESS","GHOST_WRITE","DUPLICATE_EFFECT","WRONG_TARGET","PARTIAL_EFFECT","LATE_EFFECT"]}},
+    "findings":{"type":"array","uniqueItems":true,"maxItems":50,"items":{"enum":["PHANTOM_SUCCESS","GHOST_WRITE","DUPLICATE_EFFECT","WRONG_TARGET","PARTIAL_EFFECT","LATE_EFFECT"]}},
     "asserts":{"type":"array","items":{"type":"string"}},
     "cannot_assert":{"type":"array","items":{"type":"string"}},
     "observed_at":{"type":"string","format":"date-time"},
@@ -17,8 +17,7 @@
     "reason_codes":{"type":"array","items":{"type":"string"}}
   },
   "allOf":[
-    {"if":{"properties":{"assurance":{"const":"EFFECT_CORRELATED"}}},"then":{"properties":{"cannot_assert":{"contains":{"const":"exclusive causation"}}}}},
-    {"if":{"properties":{"assurance":{"const":"EFFECT_OBSERVED"}}},"then":{"properties":{"cannot_assert":{"contains":{"const":"no same-identity competitor"}}}}},
-    {"if":{"properties":{"observation_complete":{"const":false}}}},"then":{"properties":{"assurance":{"enum":["UNOBSERVABLE","CLAIMED"]}}}}
+    {"if":{"properties":{"assurance":{"enum":["EFFECT_CORRELATED","EFFECT_OBSERVED"]}},"required":["assurance"]},"then":{"properties":{"cannot_assert":{"allOf":[{"contains":{"const":"exclusive causation"}},{"contains":{"const":"no same-identity competitor"}}]}}}},
+    {"if":{"properties":{"observation_complete":{"const":false}},"required":["observation_complete"]},"then":{"properties":{"assurance":{"enum":["UNOBSERVABLE","CLAIMED"]}}}}
   ]
 }

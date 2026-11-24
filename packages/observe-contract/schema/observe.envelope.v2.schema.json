@@ -1,0 +1,20 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://audital.ai/schemas/observe.envelope.v2.schema.json",
+  "title":"Audital Observe signed envelope (integrity of an Observe result; not Guard proof)",
+  "type":"object","additionalProperties":false,
+  "required":["v","domain","kid","alg","attestation","payload","signature"],
+  "properties":{
+    "v":{"const":2},
+    "domain":{"const":"audital.observe/v1"},
+    "kid":{"type":"string","pattern":"^[A-Za-z0-9_.:-]{8,64}$"},
+    "alg":{"const":"Ed25519"},
+    "attestation":{"enum":["local_unattested","hosted_attested"],"description":"local_unattested = integrity under a self-supplied key only; hosted_attested = signed by a key pinned in the hosted trust registry (verifiers MUST NOT accept it from embedded keys)."},
+    "payload":{"type":"object","additionalProperties":false,"required":["domain","attestation","result"],"properties":{
+      "domain":{"const":"audital.observe/v1"},
+      "attestation":{"enum":["local_unattested","hosted_attested"]},
+      "result":{"$ref":"https://audital.ai/schemas/observe.v1.schema.json"}
+    }},
+    "signature":{"type":"string","pattern":"^[A-Za-z0-9_-]{86}$"}
+  }
+}

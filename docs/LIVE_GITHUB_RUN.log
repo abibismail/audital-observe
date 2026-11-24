@@ -1,0 +1,56 @@
+
+> audital-observe-workspace@0.2.0 test:live-github
+> npm run build && node --test apps/api/tests/live/github.live.test.mjs
+
+
+> audital-observe-workspace@0.2.0 build
+> tsc -p packages/observe-contract/tsconfig.json
+
+TAP version 13
+# [live] cli/cli\#1: state=closed events=26 pages=6 requests=7 rate={"limit":60,"remaining":27,"reset_at":"2026-11-24T02:10:54.000Z","resource":"core","retry_after_s":null} auth=anonymous
+# Subtest: live: read-only posture — token is not write-capable; every request is GET
+ok 1 - live: read-only posture — token is not write-capable; every request is GET
+  ---
+  duration_ms: 2924.02125
+  type: 'test'
+  ...
+# Subtest: live: real Link-header pagination enumerates exactly the same events as a single large page
+ok 2 - live: real Link-header pagination enumerates exactly the same events as a single large page
+  ---
+  duration_ms: 515.68875
+  type: 'test'
+  ...
+# Subtest: live: truncated pagination is reported incomplete and reconciles to UNOBSERVABLE, never PHANTOM
+ok 3 - live: truncated pagination is reported incomplete and reconciles to UNOBSERVABLE, never PHANTOM
+  ---
+  duration_ms: 406.31575
+  type: 'test'
+  ...
+# Subtest: live: rate-limit headers are parsed and the budget floor stops spending after one request
+ok 4 - live: rate-limit headers are parsed and the budget floor stops spending after one request
+  ---
+  duration_ms: 24.121084
+  type: 'test'
+  ...
+# Subtest: live: consistency windows on real data — CLAIMED inside the window, decided after it
+ok 5 - live: consistency windows on real data — CLAIMED inside the window, decided after it
+  ---
+  duration_ms: 0.968167
+  type: 'test'
+  ...
+# [live] engine result: EFFECT_OBSERVED findings=[] reasons=[]
+# Subtest: live: continuous engine end-to-end against real GitHub (dev store, scheduled read-only tick)
+ok 6 - live: continuous engine end-to-end against real GitHub (dev store, scheduled read-only tick)
+  ---
+  duration_ms: 64.109875
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3988.058666
